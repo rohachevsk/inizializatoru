@@ -1,61 +1,10 @@
-//#include<iostream>
-//using namespace std;
-//
-//class CPU
-//{
-//	double price;
-//	double power;
-//	char* model;
-//public:
-//	CPU(): model(nullptr),power(0),price(0)
-//	{}
-//	CPU(const char* m, double pow, double pr):power(pow),price(pr)
-//	{
-//		model = new char[strlen(m) + 1];
-//		strcpy_s(model, strlen(m) + 1, m);
-//	}
-//	~CPU()
-//	{
-//		delete[] model;
-//	}
-//	void print()
-//	{
-//		cout << "Model:  " << model << endl;
-//		cout << "Power:  " << power << endl;
-//		cout << "Price:  " << price << endl;
-//	}
-//};
-//
-//class PC
-//{
-//	char* model;
-//	double price;
-//	CPU cpu;
-//public:
-//	PC(const char* mod, double p, const char* cp, double powcpu, double prcpu) :price(p), cpu(cp, powcpu, prcpu)
-//	{
-//		model = new char[strlen(mod) + 1];
-//		strcpy_s(model, strlen(mod) + 1, mod);
-//		price = p;
-//	}
-//	void Print()
-//	{
-//		cout << "-- PC:\n";
-//		cout << model << "\t" << price << endl;
-//		cpu.print();
-//	}
-//};
-//int main()
-//{
-//	PC obj("HP", 28000, "AMD razer", 3.5, 2000);
-//	obj.Print();
-//}
 #include<iostream>
 using namespace std;
 class Elevator
 {
 	int currentfloor;
-	int kuda;
+	int minFloor = 1;
+	int maxFloor = 2;
 	bool isWorking;
 public:
 	Elevator()
@@ -63,74 +12,115 @@ public:
 		currentfloor = 1;
 		isWorking = true;
 	}
-	void diapazon()
+	void callLift()
 	{
-		cout << "You are currently on the floor " << currentfloor << endl;
-		cout << "You can go to the second floor.If you want turn 2" << endl;
-		cin >> kuda;
-		if (kuda == 2)
+		int targetFloor;
+		if(!isWorking)
 		{
-			moveTo(2);
+			cout << "Error! The lift is not working. Please turn on the lift!" << endl;
+			return;
 		}
-		else
+		else 
 		{
-			moveTo(1);
+			cout << "You are currently on the floor " << currentfloor << endl;
+			cout << "You can select the floor. Click on the button:   " << endl;
+			cin >> targetFloor;
+			moveTo(targetFloor);
 		}
 	}
 	void moveTo(int floor) // 5
 	{
-		if (floor == 1 || floor == 2)
-		{
-			if (floor == currentfloor)
+			if (floor >= minFloor && floor <= maxFloor)
 			{
-				cout << "Error! You are already on this floor. " << endl;
+				if (floor == currentfloor)
+				{
+					cout << "Error! You are already on this floor. " << endl;
+				}
+				else
+				{
+					cout << "The movement begins at " << currentfloor << " floor to floor: " << floor << endl;
+					currentfloor = floor;
+					cout << "You arrived on floor " << floor << endl;
+				}
 			}
 			else
 			{
-				cout << "The movement begins at " << floor << " etazh" << endl;
-				currentfloor = floor;
+				cout << "Error! There is no such floor in this building. " << endl;
 			}
-		}
+	}
+	int returnFloor()
+	{
+		return currentfloor;
 	}
 	void currentFloor()
 	{
-		cout << "The current floor is equal to " << this->currentfloor << endl;
+		cout << "You are currently on the floor " << currentfloor << endl;
 	}
 	void turnOn() // 2
 	{
 		isWorking = true;
-		cout << "Lift is turn on and ready to work!" << endl;
+		cout << "Lift is turned on and ready to work!" << endl;
 	}
-	void turnOff()
+	void turnOff() //2
 	{
 		isWorking = false;
-		cout << "Lift is turn off" << endl;
+		cout << "Lift is turned off" << endl;
 	}
-	bool getStatus()
+	void setMinFloor(int minFloor)
 	{
-		return isWorking;
+		this->minFloor = minFloor;
 	}
-	void setStatus(bool status)
+	void setMaxFloor(int maxFloor)
 	{
-		isWorking = status;
+		this->maxFloor = maxFloor;
 	}
-
+	void printStatus()
+	{
+		if (isWorking)
+		{
+			cout << "Lift is working" << endl;
+		}
+		else
+		{
+			cout << "Lift isnt working" << endl;
+		}
+	}
 };
 int main()
 {
-	
 	Elevator lift;
-	if (lift.getStatus())
-	{
-		cout << "Status : Lift is working" << endl;
-	}
-	else
-	{
-		cout << "Status : Lift isnt working" << endl;
-	}
 	lift.turnOn();
-	lift.diapazon();
-	lift.getStatus();
+	lift.callLift();
 	lift.currentFloor();
 	lift.turnOff();
+	int choice;
+	do
+	{
+		cout << "If you want to continue, press 1." << endl;
+		cout << "If you want to exit press 2." << endl;
+		cout << "If you want to know the status of the elevator, press 3." << endl;
+		cout << "If you want to turn on the elevator, press 4." << endl;
+		cout << "If you want to turn off the elevator, press 5." << endl;
+		cin >> choice;
+		switch (choice)
+		{
+		case 1:
+			cout << "You chose to continue." << endl;
+			lift.callLift();
+			break;
+		case 2:
+			cout << "You chose to exit." << endl;
+			return 0;
+			break;
+		case 3:
+			lift.printStatus();
+			break;
+		case 4:
+			lift.turnOn();
+			break;
+		case 5:
+			lift.turnOff();
+			break;
+		}
+	} while (choice != 2); 
 }
